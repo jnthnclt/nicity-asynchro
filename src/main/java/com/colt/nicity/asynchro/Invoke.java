@@ -21,16 +21,34 @@ package com.colt.nicity.asynchro;
 
 import com.colt.nicity.core.process.IInvoke;
 
+/**
+ *
+ * @author Administrator
+ */
 abstract public class Invoke extends Thread implements IInvoke {
 
+    /**
+     *
+     */
     public static String jvmName = "";
     static Uncaught uncaught = new Uncaught();
+    /**
+     *
+     */
     public boolean blocking = false;
 
+    /**
+     *
+     */
     public Invoke() {
         setUncaughtExceptionHandler(uncaught);
     }
 
+    /**
+     *
+     * @param _lock
+     * @throws Exception
+     */
     public void wait(Object _lock) throws Exception {
         blocking = true;
         _lock.wait();

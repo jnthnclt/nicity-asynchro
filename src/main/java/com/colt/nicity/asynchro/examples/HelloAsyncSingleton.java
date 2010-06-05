@@ -24,8 +24,16 @@ import com.colt.nicity.core.process.IAsyncResponse;
 import com.colt.nicity.core.lang.IOut;
 import com.colt.nicity.core.lang.SysOut;
 
+/**
+ *
+ * @author Administrator
+ */
 public class HelloAsyncSingleton {
     static private AsyncSingleton<String> singleton;
+    /**
+     *
+     * @param _args
+     */
     static public  void main(String[] _args) {
         final SysOut _ = new SysOut();
         singleton = new AsyncSingleton<String>() {
@@ -46,12 +54,14 @@ public class HelloAsyncSingleton {
                     } catch(Exception x) {}
                     _.out("Getting...");
                     singleton.get(_, new IAsyncResponse<String>() {
+                        @Override
                         public void response(IOut _, String _response) {
                             _.out("Got:"+_response);
                         }
                         public void canceled(IOut _, String _response) {
                             _.out("Canceled:"+_response);
                         }
+                        @Override
                         public void error(IOut _, Throwable _t) {
                             _.out("Error:"+_t);
                         }

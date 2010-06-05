@@ -23,38 +23,65 @@ import com.colt.nicity.core.process.ICall;
 import com.colt.nicity.core.lang.IOut;
 import com.colt.nicity.core.time.UTime;
 
+/**
+ *
+ * @author Administrator
+ */
 public class ElapseCall {
 
     IOut out;
     long elapse;
     ICall call;
 
+    /**
+     *
+     * @param _
+     * @param _elapse
+     * @param _call
+     */
     public ElapseCall(IOut _, long _elapse, ICall _call) {
         out = _;
         elapse = _elapse;
         call = _call;
     }
 
+    /**
+     *
+     * @param _elapse
+     */
     public void changeElapse(long _elapse) {
         elapse = _elapse;
     }
     final private Object activeLock = new Object();
     private Trigger active;
 
+    /**
+     *
+     */
     public void signal() {
         signal(System.currentTimeMillis());
     }
 
+    /**
+     *
+     */
     public void cancel() {
         cancel(System.currentTimeMillis());
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean active() {
         synchronized (activeLock) {
             return active != null;
         }
     }
 
+    /**
+     *
+     */
     public void trigger() {
         synchronized (activeLock) {
             if (active != null) {
@@ -73,6 +100,10 @@ public class ElapseCall {
         }
     }
 
+    /**
+     *
+     * @param _time
+     */
     public void signal(long _time) {
         synchronized (activeLock) {
             if (active != null) {
@@ -91,6 +122,10 @@ public class ElapseCall {
         }
     }
 
+    /**
+     *
+     * @param _time
+     */
     public void cancel(long _time) {
         synchronized (activeLock) {
             if (active != null) {

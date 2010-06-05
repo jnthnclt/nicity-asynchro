@@ -25,6 +25,10 @@ import com.colt.nicity.core.lang.IOut;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ *
+ * @author Administrator
+ */
 public class CallStack implements ICallQueue {
 
     final private List<Thread> threads = new Vector<Thread>();
@@ -32,21 +36,33 @@ public class CallStack implements ICallQueue {
     private int maxThreads = 1;
     private int maxEnqueued = -1;
 
+    /**
+     *
+     */
     public CallStack() {
     }
     // < 1 means unlimited
 
+    /**
+     *
+     * @param _maxThreads
+     * @param _maxEnqueued
+     */
     public CallStack(int _maxThreads, int _maxEnqueued) {
         maxThreads = _maxThreads;
         maxEnqueued = _maxEnqueued;
     }
 
+    /**
+     *
+     */
     public void purgeCalls() {
         synchronized (enqueuedStack) {
             enqueuedStack.clear();
         }
     }
 
+    @Override
     public void enqueueCall(IOut _, ICall _call) {
         synchronized (enqueuedStack) {
             while (true) {
@@ -110,6 +126,10 @@ public class CallStack implements ICallQueue {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int getCount() {
         return enqueuedStack.size();
     }

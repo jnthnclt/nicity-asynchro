@@ -32,6 +32,13 @@ import com.colt.nicity.core.lang.IOut;
  * @param <R> The type used to aggregate the responses
  */
 abstract public class AsyncResponses<K,V,R> implements IAsyncResponse<R> {
+    /**
+     *
+     * @param _
+     * @param _call
+     * @param _response
+     * @param _doneProcessingResponse
+     */
     abstract public void response(IOut _,AsyncCall<K> _call,V _response,IAsyncResponse _doneProcessingResponse);
     
     private ICallQueue queue;
@@ -39,17 +46,35 @@ abstract public class AsyncResponses<K,V,R> implements IAsyncResponse<R> {
     private int errors = 0;
     private boolean closed = false;
     private R responses;
+    /**
+     *
+     * @param _queue
+     * @param _responses
+     */
     public AsyncResponses(ICallQueue _queue,R _responses) {
         queue = _queue;
         responses = _responses;
     }
+    /**
+     *
+     * @return
+     */
     public R getCallsResponses() {
         return responses;
     }
+    /**
+     *
+     * @return
+     */
     public String tosString() {
         return "Pending:"+pending+" Errors:"+errors+" Closed:"+closed;
     }
 
+    /**
+     *
+     * @param _
+     * @param _call
+     */
     public void enqueue(IOut _,final AsyncCall<K> _call) {
         synchronized(this) {
             if (closed) throw new RuntimeException("Trying to add to a closed call set"+this.getClass());
@@ -57,11 +82,14 @@ abstract public class AsyncResponses<K,V,R> implements IAsyncResponse<R> {
         }
         _call.setCalledWhenDoneOrError(new IAsyncResponse<V>() {
             AsyncCall<K> call = _call;
+            @Override
             public void response(IOut _,final V _response) {
                 final IAsyncResponse allDone = new IAsyncResponse<V>() {
+                    @Override
                     public void response(IOut _, V _response) {
                         allDone(_);
                     }
+                    @Override
                     public void error(IOut _, Throwable _t) {
                         _.out(_t);
                         synchronized(AsyncResponses.this) { errors++; }
@@ -70,11 +98,13 @@ abstract public class AsyncResponses<K,V,R> implements IAsyncResponse<R> {
                 };
                 if (queue == null) AsyncResponses.this.response(_,call,_response,allDone);
                 else queue.enqueueCall(_,new ICall() {
+                    @Override
                     public void invoke(IOut _) {
                         AsyncResponses.this.response(_,call,_response,allDone);
                     }
                 });
             }
+            @Override
             public void error(IOut _, Throwable _t) {
                 _.out(_t);
                 synchronized(this) { errors++; }
@@ -84,6 +114,10 @@ abstract public class AsyncResponses<K,V,R> implements IAsyncResponse<R> {
         if (queue == null) _call.invoke(_);
         else queue.enqueueCall(_,_call);
     }
+    /**
+     *
+     * @param _
+     */
     public void close(IOut _) {
         synchronized(this) { closed = true; }
         allDone(_);

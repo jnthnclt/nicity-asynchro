@@ -31,16 +31,29 @@ import java.util.Vector;
  */
 abstract public class AsyncSingleton<R> {
 
+    /**
+     *
+     * @param _
+     * @param _created
+     */
     abstract public void create(IOut _, IAsyncResponse<R> _created);
     private R signleton = null;
     final private List<IAsyncResponse<R>> waiting = new Vector<IAsyncResponse<R>>();
 
+    /**
+     *
+     */
     public void clear() {
         synchronized (waiting) {
             signleton = null;
         }
     }
 
+    /**
+     *
+     * @param _
+     * @param _got
+     */
     public void get(IOut _, IAsyncResponse<R> _got) {
         synchronized (waiting) {
             if (signleton != null) {
@@ -57,6 +70,7 @@ abstract public class AsyncSingleton<R> {
         }
         create(_, new IAsyncResponse<R>() {
 
+            @Override
             public void response(IOut _, R _response) {
                 signleton = _response;
                 for (IAsyncResponse n : allWaiting()) {
@@ -64,6 +78,7 @@ abstract public class AsyncSingleton<R> {
                 }
             }
 
+            @Override
             public void error(IOut _, Throwable _t) {
                 for (IAsyncResponse n : allWaiting()) {
                     n.error(_, _t);

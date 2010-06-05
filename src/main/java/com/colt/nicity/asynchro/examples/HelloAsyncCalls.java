@@ -26,11 +26,20 @@ import com.colt.nicity.core.process.IAsyncResponse;
 import com.colt.nicity.core.lang.IOut;
 import com.colt.nicity.core.lang.SysOut;
 
+/**
+ *
+ * @author Administrator
+ */
 public class HelloAsyncCalls {
 
+    /**
+     *
+     * @param _args
+     */
     static public void main(String[] _args) {
         get(new SysOut(), 10, new IAsyncResponse<double[]>() {
 
+            @Override
             public void response(IOut _, double[] _response) {
                 System.out.println("Response");
                 for (int i = 0; i < _response.length; i++) {
@@ -38,6 +47,7 @@ public class HelloAsyncCalls {
                 }
             }
 
+            @Override
             public void error(IOut _, Throwable _t) {
                 System.out.print("Error:" + _t);
             }
@@ -45,6 +55,12 @@ public class HelloAsyncCalls {
     }
     static private CallStack callStack = new CallStack();
 
+    /**
+     *
+     * @param _
+     * @param _count
+     * @param _got
+     */
     static public void get(IOut _, int _count,
         final IAsyncResponse<double[]> _got) {
         double[] responses = new double[_count];
@@ -59,10 +75,12 @@ public class HelloAsyncCalls {
                 _doneProcessingResponse.response(_, _response);
             }
 
+            @Override
             public void response(IOut _, double[] _response) {
                 _got.response(_, getCallsResponses());
             }
 
+            @Override
             public void error(IOut _, Throwable _t) {
                 _got.error(_, _t);
             }
@@ -70,6 +88,7 @@ public class HelloAsyncCalls {
         for (int i = 0; i < responses.length; i++) {
             calls.enqueue(_, new AsyncCall<Integer>(i) {
 
+                @Override
                 public void invoke(IOut _) {
                     getRandom(_, response());
                 }
@@ -79,6 +98,11 @@ public class HelloAsyncCalls {
     }
 
     // a method that sleeps for a random duration and then produces a random number
+    /**
+     *
+     * @param _
+     * @param _response
+     */
     static public void getRandom(final IOut _, final IAsyncResponse _response) {
         new Thread() {
 

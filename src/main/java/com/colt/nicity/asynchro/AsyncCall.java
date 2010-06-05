@@ -23,23 +23,41 @@ import com.colt.nicity.core.process.ICall;
 import com.colt.nicity.core.process.IAsyncResponse;
 import com.colt.nicity.core.lang.ASetObject;
 
+/**
+ *
+ * @author Administrator
+ * @param <E>
+ */
 abstract public class AsyncCall<E> extends ASetObject<E> implements ICall {
 
     private IAsyncResponse response;
     private E key;
 
+    /**
+     *
+     * @param _key
+     */
     public AsyncCall(E _key) {
         key = _key;
     }
 
+    @Override
     public E hashObject() {
         return key;
     }
 
+    /**
+     *
+     * @param _response
+     */
     public void setCalledWhenDoneOrError(IAsyncResponse _response) {
         response = _response;
     }
 
+    /**
+     *
+     * @return
+     */
     final public IAsyncResponse response() {
         return response;
     }

@@ -19,11 +19,19 @@
  */
 package com.colt.nicity.asynchro;
 
+/**
+ *
+ * @author Administrator
+ */
 public class Uncaught implements Thread.UncaughtExceptionHandler {
 
+    /**
+     *
+     */
     public Uncaught() {
     }
 
+    @Override
     public void uncaughtException(Thread t, Throwable e) {
         System.out.println("JVM:" + Invoke.jvmName);
         System.out.println("Thread:" + t);

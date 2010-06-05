@@ -22,6 +22,11 @@ package com.colt.nicity.asynchro;
 import com.colt.nicity.core.process.IAsyncResponse;
 import com.colt.nicity.core.lang.IOut;
 
+/**
+ *
+ * @author Administrator
+ * @param <T>
+ */
 public class AsyncResponsesTrigger<T> {
 
     private IAsyncResponse<T> trigger;
@@ -30,11 +35,22 @@ public class AsyncResponsesTrigger<T> {
     private int errors = 0;
     private boolean closed;
 
+    /**
+     * 
+     * @param _triggerResponse
+     * @param _trigger
+     */
     public AsyncResponsesTrigger(T _triggerResponse, IAsyncResponse<T> _trigger) {
         trigger = _trigger;
         triggerResponse = _triggerResponse;
     }
 
+    /**
+     *
+     * @param <R>
+     * @param _enqueue
+     * @return
+     */
     synchronized public <R> IAsyncResponse<R> enqueue(
         final IAsyncResponse<R> _enqueue) {
         if (closed)
@@ -42,6 +58,7 @@ public class AsyncResponsesTrigger<T> {
         pending++;
         return new IAsyncResponse<R>() {
 
+            @Override
             public void response(IOut _, R _response) {
                 try {
                     _enqueue.response(_, _response);
@@ -52,6 +69,7 @@ public class AsyncResponsesTrigger<T> {
                 }
             }
 
+            @Override
             public void error(IOut _, Throwable _t) {
                 _enqueue.error(_, _t);
                 AsyncResponsesTrigger.this.error(_, _t);
@@ -59,10 +77,18 @@ public class AsyncResponsesTrigger<T> {
         };
     }
 
+    /**
+     *
+     * @return
+     */
     synchronized public boolean errors() {
         return errors != 0;
     }
 
+    /**
+     *
+     * @param _
+     */
     synchronized public void close(IOut _) {
         if (closed)
             return;
