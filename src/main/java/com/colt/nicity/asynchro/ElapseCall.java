@@ -197,7 +197,8 @@ public class ElapseCall {
                             call.invoke(out);
                         }
                         catch (Throwable t) {
-                            out.out(t);
+                            if (out != null) out.out(t);
+                            else t.printStackTrace();
                         }
                         synchronized (activeLock) {
                             if (triggered) {
